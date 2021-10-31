@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Тестовое задание</title>
+  </head>
+  <body>
+    <nav class="navigation__container">
+      <span class="navigation__item navigation__item_catalogue active"><h2>Каталог</h2></span>
+      <span class="navigation__item navigation__item_favorite"><h2>Избранное</h2></span>
+    </nav>
+    <section class="catalogue">
+      <div class="catalogue__container open">
+        <div class="catalogue__inner">
+          <div class="catalogue__preloader-container preloader">
+            <div class="preloader__inner">
+              <img src="./resourses/loader.gif" alt="" class="catalogue__preloader-gif" />
+            </div>
+          </div>
+          <div class="catalogue__error-container error">
+            <div class="error__inner">
+              <img src="./resourses/error.png" alt="" class="catalogue__error"/>
+              <span class="error__text">
+                <h3>Сервер не отвечает</h3>
+                <p>Уже работаем над этим</p>
+              </span>
+            </div>
+          </div>
+          <ul class="catalogue__users-list"></ul>
+        </div>
+      </div>
+      <div class="favorite__container">
+        <div class="favorite__empty">
+          <img src="./resourses/empty.png" alt="" class="favorite__empty-img"/>
+          <h3>Список избранного пуст</h3>
+          <p>Добавляйте изображения, нажимая на звездочки</p>
+        </div>
+        <div class="favorite__inner">
+          <div class="favorite__photos">
+            
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="./script.js"></script>
+  </body>
+</html>
