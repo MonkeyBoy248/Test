@@ -73,6 +73,9 @@ body.lock{
     padding: 16px 32px;
     text-align: center;
     font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 130%;
 }
 .navigation__item:hover{
     cursor: pointer;
@@ -100,12 +103,14 @@ body.lock{
     width: 100%;
     margin-top: 16px;
 }
-li{
-    list-style: none;
-    cursor: pointer;
-}
 .catalogue__users-list{
     padding: 0;
+}
+.catalogue__users-list h3, .catalogue__users-list span{
+    cursor: pointer;
+}
+li{
+    list-style: none;
 }
 .catalogue__item-info{
     display: flex;
@@ -116,22 +121,18 @@ li{
 .icon{
     height: 32px;
     width: 32px;
-    background-color: #117DC1;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
-    font-size: 30px;
     margin-right: 24px;
-    transition: font-size 0.4s ease-in-out;
 }
 .catalogue__user-name{
     font-style: normal;
     font-weight: bold;
     font-size: 22px;
     line-height: 130%;
-    color: #1C1C1C;;
+    color: #1C1C1C;
 }
 .album__info{
     display: flex;

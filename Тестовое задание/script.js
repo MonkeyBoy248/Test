@@ -39,7 +39,7 @@ window.addEventListener('load', () => {
 })
 
 navigationContainer.addEventListener('click', (e) => {
-    let target = e.target.closest('span');
+    let target = e.target;
     if(target == navigationCatalogue && navigationFavorite.classList.contains('active')){
        toggleActiveClass(navigationFavorite, navigationCatalogue, favoriteContainer, catalogueContainer);
     }else{
@@ -255,9 +255,9 @@ function createUserTemplate(name, id, errorType) {
     let userLi = `<li class="catalogue__user-item" userid=${id}>
     <div class="catalogue__item-info">
         <span class="catalogue__list-icon icon">
-         <object data="./resourses/open_list.svg" type="image/svg+xml"></object>
+        <img src="./resourses/open_list.svg">
         </span>
-        <h1 class="catalogue__user-name">${name}</h1>
+        <h3 class="catalogue__user-name">${name}</h3>
     </div>
     <ul class="catalogue__albums-list">
     </ul>
@@ -296,7 +296,7 @@ function createAlbumTemplate(title, index, albumId, errorType) {
             <div class="album__inner">
                 <div class="album__info">
                     <span class="album__icon icon">
-                    <object data="./resourses/open_list.svg" type="image/svg+xml"></object>
+                    <img src="./resourses/open_list.svg">
                     </span>
                     <span class="album__name">${title}</span>
                 </div>
@@ -345,15 +345,15 @@ function fillFavoriteTemplate(url, fullSize, elem, title, src) {
 
 function styleButton(target, element) {
     if(target.querySelector(`.${element}`).classList.contains('active')){
-        target.querySelector('.icon object').setAttribute("data", "./resourses/close_list.svg");
+        target.querySelector('.icon img').setAttribute("src", "./resourses/close_list.svg");
     }else{
-        target.querySelector('.icon object').setAttribute("data", "./resourses/open_list.svg");        
+        target.querySelector('.icon img').setAttribute("src", "./resourses/open_list.svg");        
     }
 }
 
 function styleErrorButton(toggletarget, target, element){
     toggletarget.classList.toggle("active");
-    target.querySelector('.icon object').setAttribute("data", "./resourses/close_list.svg");
+    target.querySelector('.icon img').setAttribute("src", "./resourses/close_list.svg");
     styleButton(target, element);  
 }
 
