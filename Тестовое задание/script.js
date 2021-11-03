@@ -126,7 +126,6 @@ favoritePhotos.addEventListener('click', (e) => {
             if(target.closest("div").querySelector(".favorite__image-title").innerHTML == i.title){
                 favoriteImages.splice(favoriteImages.indexOf(i), 1);
                 updateLocalStorage();
-                console.log(favoriteImages);
                 showEmptyMessage();
             }
         }
