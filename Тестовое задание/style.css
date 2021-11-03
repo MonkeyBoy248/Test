@@ -173,6 +173,7 @@ li{
 .image{
     position: relative;
     height: 150px;
+    cursor: pointer;
 }
 .image img{
     width: 100%;
