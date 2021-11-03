@@ -131,7 +131,7 @@ favoritePhotos.addEventListener('click', (e) => {
             }
         }
         for(let i = 0; i < allImages.length; i++){
-            setEmptyStar(imagesTitles, favoriteButtons)
+            setEmptyStar(imagesTitles, favoriteButtons);
         }
         favoritePhotos.innerHTML = " ";
         for(let j of favoriteImages){
