@@ -20,12 +20,14 @@ let favoriteImages;
 !localStorage.favorites ? favoriteImages = [] : favoriteImages = JSON.parse(localStorage.getItem('favorites'));
 
 window.addEventListener('load', () => {
-    fetch('https://json.medrating.org/users/')
-    .then(response => response.json())
-    .catch(() => showError("catalogue__error-container"))
-    .then(function appendUsers(data){
+    showUsersList();
+    showEmptyMessage();
+})
+
+async function showUsersList(){
+    function appendUsers(data){
         let preloaderContainer = document.querySelector('.catalogue__preloader-container');
-        hidePreloader(preloaderContainer);
+        hidePreloader(preloaderContainer, 200);
         for(let i of data){
             let id = i.id;
             let name = i.name;
@@ -34,9 +36,17 @@ window.addEventListener('load', () => {
             }
             
         }
-    })
-    showEmptyMessage();
-})
+    }
+    
+    try{
+        let result = await fetch('https://json.medrating.org/users/');
+        let data = await result.json();
+        appendUsers(data);
+    }
+    catch{
+        showError("catalogue__error-container");
+    }
+}
 
 navigationContainer.addEventListener('click', (e) => {
     let target = e.target;
@@ -51,8 +61,10 @@ usersList.addEventListener('click', (e) => {
     let target = e.target;
     if(target.closest('li').matches('.catalogue__user-item')){
         target.closest('li').querySelector('.catalogue__albums-list').innerHTML = '';
+        createPreloaderTemplate(target.closest("li"));
         fetchAlbums(target.closest("li").getAttribute("userid"), target.closest("li"),  target.closest('li').querySelector('.catalogue__albums-list'));
     }else if(target.closest('div').matches('.album__info')){
+        createPreloaderTemplate(target.closest("li"));
         fetchPhotos(target.closest("li").getAttribute("albumid"), target.closest("li"), target.closest("li").querySelector('.album__inner'));
            
     }else if(target.classList.contains('fav')){ 
@@ -160,17 +172,16 @@ function toggleActiveClass(currentActive, targetActive, currentOpenedContainer, 
     targetOpenedContainer.classList.add('open');
 }
 
-function fetchAlbums(id, target, toggledBlock){
-    createPreloaderTemplate(target);
+async function fetchAlbums(id, target, toggledBlock){
     let allLi = [...document.getElementsByClassName('catalogue__user-item')];
-    fetch(`https://json.medrating.org/albums?userId=${id}`)
-    .then(resp => resp.json())
-    .catch(function showAlbumError() {   
-        styleErrorButton(target.querySelector(".error-container"), target, "error-container")
-    })
-    .then(function appendAlbums(data) {
+    function showAlbumError() {  
         let preloaderContainer = document.querySelector('.preloader-container');
-        hidePreloader(preloaderContainer);
+        hidePreloader(preloaderContainer, 0); 
+        styleErrorButton(target.querySelector(".error-container"), target, "error-container")
+    }
+    function appendAlbums(data) {
+        let preloaderContainer = document.querySelector('.preloader-container');
+        hidePreloader(preloaderContainer, 200);
         toggledBlock.classList.toggle('active');
         for(let i of data){
             let id = i.id;
@@ -178,20 +189,27 @@ function fetchAlbums(id, target, toggledBlock){
             createAlbumTemplate(title, allLi.indexOf(target), id, "album");
             styleButton(target, 'catalogue__albums-list');               
         }
-    })  
+    }
+    try{
+        let result = await fetch(`https://json.medrating.org/albums?userId=${id}`);
+        let data = await result.json();
+        appendAlbums(data);
+    }
+    catch{
+        showAlbumError();
+    } 
 }
 
-function fetchPhotos(albumId, target, toggledBlock){
-    createPreloaderTemplate(target);
-    fetch(`https://json.medrating.org/photos?albumId=${albumId}`)
-    .then(resp => resp.json())
-    .catch(function showGalleryError() {
+async function fetchPhotos(albumId, target, toggledBlock){
+    function showGalleryError() {
+        let preloaderContainer = document.querySelector('.preloader-container');
+        hidePreloader(preloaderContainer, 0);
         styleErrorButton(target.querySelector(".error-container"), target, "error-container");
         toggledBlock.querySelector(".images__container").style.display = "none";        
-    })
-    .then(function appendGallery(data) {
-        let preloaderContainer = target.querySelector('.preloader-container');
-        hidePreloader(preloaderContainer);
+    }
+    function appendGallery(data) {
+        let preloaderContainer = document.querySelector('.preloader-container');
+        hidePreloader(preloaderContainer, 200);
         toggledBlock.classList.toggle('active');
         toggledBlock.querySelector(".images__container").classList.toggle('active');
         function favIconCheck(){
@@ -207,7 +225,17 @@ function fetchPhotos(albumId, target, toggledBlock){
             }
         }
         favIconCheck();
-    })
+    }
+
+    try{
+        let result = await fetch(`https://json.medrating.org/photos?albumId=${albumId}`);        
+        let data = await result.json();
+        appendGallery(data);
+    }
+    catch{
+        showGalleryError()
+    }
+    
 }
 
 function updateLocalStorage(){
@@ -356,13 +384,15 @@ function styleErrorButton(toggletarget, target, element){
     styleButton(target, element);  
 }
 
-function hidePreloader(targetContainer){
+function hidePreloader(targetContainer, timer){
     setTimeout(() => {
         targetContainer.remove()
-    }, 200); 
+    }, timer); 
 }
 
 function showError(errorTargetContainer){
+    let preloaderContainer = document.querySelector('.catalogue__preloader-container');
+    hidePreloader(preloaderContainer, 200);
     let errorContainer = document.querySelector(`.${errorTargetContainer}`);
     errorContainer.style.display = 'block';
 }
