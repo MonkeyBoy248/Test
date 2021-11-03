@@ -21,7 +21,8 @@ let favoriteImages;
 
 window.addEventListener('load', () => {
     fetch('https://json.medrating.org/users/')
-    .then(response => response.json(),  () => showError("catalogue__error-container"))
+    .then(response => response.json())
+    .catch(() => showError("catalogue__error-container"))
     .then(function appendUsers(data){
         let preloaderContainer = document.querySelector('.catalogue__preloader-container');
         hidePreloader(preloaderContainer);
@@ -88,8 +89,8 @@ usersList.addEventListener('click', (e) => {
         let images = [...document.getElementsByClassName('image')];
         let popUp = [...document.getElementsByClassName('pop-up__container')];
         showPopUp(popUp[images.indexOf(target.closest('div'))]);
-    }else{
-        let closeButtons = [...document.getElementsByClassName('close')];
+    }else if(target.matches(".pop-up__close-btn")){
+        let closeButtons = [...document.getElementsByClassName('pop-up__close-btn')];
         let popUp = [...document.getElementsByClassName('pop-up__container')];
         closePopUp(popUp[closeButtons.indexOf(target)]);
     }
@@ -140,8 +141,8 @@ favoritePhotos.addEventListener('click', (e) => {
     }
     else if(target.matches('.img')){
         showPopUp(popUp[images.indexOf(target)]);
-    }else{
-        let closeButtons = [...favoritePhotos.getElementsByClassName('close')];
+    }else if(target.matches(".pop-up__close-btn")){
+        let closeButtons = [...favoritePhotos.getElementsByClassName('pop-up__close-btn')];
         closePopUp(popUp[closeButtons.indexOf(target)]);
     }
 
@@ -164,8 +165,9 @@ function fetchAlbums(id, target, toggledBlock){
     createPreloaderTemplate(target);
     let allLi = [...document.getElementsByClassName('catalogue__user-item')];
     fetch(`https://json.medrating.org/albums?userId=${id}`)
-    .then(resp => resp.json(), function showAlbumError() {   
-        styleErrorButton(target.querySelector(".error-container"), target, "error-container", styleButton)
+    .then(resp => resp.json())
+    .catch(function showAlbumError() {   
+        styleErrorButton(target.querySelector(".error-container"), target, "error-container")
     })
     .then(function appendAlbums(data) {
         let preloaderContainer = document.querySelector('.preloader-container');
@@ -183,8 +185,9 @@ function fetchAlbums(id, target, toggledBlock){
 function fetchPhotos(albumId, target, toggledBlock){
     createPreloaderTemplate(target);
     fetch(`https://json.medrating.org/photos?albumId=${albumId}`)
-    .then(resp => resp.json(), function showGalleryError() {
-        styleErrorButton(target.querySelector(".error-container"), target, "error-container", styleButton);
+    .then(resp => resp.json())
+    .catch(function showGalleryError() {
+        styleErrorButton(target.querySelector(".error-container"), target, "error-container");
         toggledBlock.querySelector(".images__container").style.display = "none";        
     })
     .then(function appendGallery(data) {
@@ -348,10 +351,10 @@ function styleButton(target, element) {
     }
 }
 
-function styleErrorButton(toggletarget, target, element, callback){
+function styleErrorButton(toggletarget, target, element){
     toggletarget.classList.toggle("active");
     target.querySelector('.icon object').setAttribute("data", "./resourses/close_list.svg");
-    callback(target, element);  
+    styleButton(target, element);  
 }
 
 function hidePreloader(targetContainer){
